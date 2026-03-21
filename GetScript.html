@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Legion - Scripts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Prism.js for syntax highlighting -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+body { background:#050508; color:white; overflow:hidden; }
+#bgCanvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+
+nav {
+  position:fixed; width:100%; display:flex; justify-content:space-between;
+  padding:20px 50px; background:rgba(10,10,20,0.6); backdrop-filter:blur(10px);
+}
+nav h1 {
+  background:linear-gradient(90deg,#7a5cff,#00d4ff);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+nav a { margin-left:25px; color:#aaa; text-decoration:none; }
+nav a:hover { color:white; }
+
+.hero {
+  min-height:100vh; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  padding:0;
+}
+
+.card {
+  background:rgba(20,20,30,0.6);
+  padding:30px; border-radius:16px; backdrop-filter:blur(12px);
+  text-align:center; width:600px; max-height:80vh; overflow-y:auto;
+}
+
+.card h2 {
+  font-size:2rem;
+  background:linear-gradient(90deg,#7a5cff,#00d4ff);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.card p { margin-top:10px; color:#aaa; font-size:1rem; }
+
+.script-block {
+  text-align:left;
+  margin-top:20px;
+  font-family:monospace;
+  font-size:0.95rem;
+  white-space:pre-wrap;
+  position:relative;
+  background:transparent; /* remove black background */
+  padding:0; /* remove extra padding */
+}
+
+.copy-btn {
+  position:absolute;
+  top:0; right:0;
+  padding:5px 10px;
+  background:linear-gradient(90deg,#7a5cff,#00d4ff);
+  border:none;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  font-size:0.8rem;
+  transition:0.3s;
+}
+.copy-btn:hover { opacity:0.8; }
+
+.status {
+  margin-top:10px; font-size:0.9rem; color:#aaa;
+}
+
+/* Prism syntax highlight colors only */
+.token.comment { color: #6a9955 !important; }
+.token.keyword { color: #569cd6 !important; }
+.token.function { color: #dcdcaa !important; }
+.token.string { color: #ce9178 !important; }
+.token.number { color: #b5cea8 !important; }
+.token.operator { color: #d4d4d4 !important; }
+.token.variable { color: #9cdcfe !important; }
+
+pre[class*="language-"] { background:transparent !important; padding:0 !important; }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<nav>
+  <h1>Legion</h1>
+  <div>
+    <a href="https://discord.gg/fvbJNKzQAT" target="_blank">Discord</a>
+    <a href="file:///C:/Users/Blacksn0w/Desktop/Diiamantii/Legion/Website/GetScript.html">Scripts</a>
+    <a href="file:///C:/Users/Blacksn0w/Desktop/Diiamantii/Legion/Website/GetKeyWeb.html">Get Key</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="card">
+    <h2>Available Scripts</h2>
+    <p>Click "Copy" to copy the script to your clipboard.</p>
+
+    <div class="script-block">
+      <button class="copy-btn" onclick="copyScript(this)">Copy</button>
+<pre><code class="language-lua">game.Players.LocalPlayer:Kick("Hello World")</code></pre>
+    </div>
+</section>
+
+<script>
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let particles = [];
+
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+class Particle {
+  constructor() {
+    this.x = Math.random()*canvas.width;
+    this.y = Math.random()*canvas.height;
+    this.size = Math.random()*2 +1;
+    this.speedX = (Math.random()-0.5)*0.5;
+    this.speedY = (Math.random()-0.5)*0.5;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if(this.x<0||this.x>canvas.width)this.speedX*=-1;
+    if(this.y<0||this.y>canvas.height)this.speedY*=-1;
+  }
+  draw() {
+    ctx.fillStyle="rgba(122,92,255,0.7)";
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+  }
+}
+function init() {
+  particles=[];
+  for(let i=0;i<100;i++) particles.push(new Particle());
+}
+function connect() {
+  for(let a=0;a<particles.length;a++){
+    for(let b=a;b<particles.length;b++){
+      let dx=particles[a].x-particles[b].x;
+      let dy=particles[a].y-particles[b].y;
+      let dist=dx*dx+dy*dy;
+      if(dist<9000){
+        ctx.strokeStyle="rgba(0,212,255,0.06)";
+        ctx.lineWidth=1;
+        ctx.beginPath();
+        ctx.moveTo(particles[a].x,particles[a].y);
+        ctx.lineTo(particles[b].x,particles[b].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let p of particles){p.update();p.draw();}
+  connect();
+  requestAnimationFrame(animate);
+}
+init();
+animate();
+
+function copyScript(btn){
+  const scriptText = btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(scriptText).then(()=>{
+    const status = document.getElementById("status");
+    status.innerText = "✅ Script copied!";
+    status.style.color="#00ffae";
+    setTimeout(()=>{
+      status.innerText="Ready to copy.";
+      status.style.color="#aaa";
+    },3000);
+  });
+}
+</script>
+
+</body>
+</html>
